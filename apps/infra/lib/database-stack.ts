@@ -141,7 +141,7 @@ export class DatabaseStack extends cdk.Stack {
      */
     this.cluster = new rds.DatabaseCluster(this, "AuroraCluster", {
       engine: rds.DatabaseClusterEngine.auroraPostgres({
-        version: rds.AuroraPostgresEngineVersion.VER_15_5,
+        version: rds.AuroraPostgresEngineVersion.VER_15_10,
       }),
       credentials: rds.Credentials.fromSecret(this.secret),
       writer: rds.ClusterInstance.serverlessV2("writer", {
