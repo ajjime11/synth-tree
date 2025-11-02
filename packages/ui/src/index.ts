@@ -1,7 +1,6 @@
 // Export all components
 export { Button, buttonVariants } from "./components/ui/button";
 export { Input } from "./components/ui/input";
-export { Logo, logoVariants } from "./components/ui/logo";
 export {
   Card,
   CardHeader,

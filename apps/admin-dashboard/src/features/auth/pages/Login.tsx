@@ -5,7 +5,6 @@ import {
   CardFooter,
   CardHeader,
   Input,
-  Logo,
   toast,
   Toaster,
 } from "@skilltree/ui";
@@ -208,9 +207,7 @@ export function Login() {
     >
       <Toaster position="top-center" />
       <Card>
-        <CardHeader>
-          <Logo size="lg" />
-        </CardHeader>
+        <CardHeader>Logo Goes Here</CardHeader>
         <CardContent className="space-y-6">
           {!showVerificationCode ? (
             <>

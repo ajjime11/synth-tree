@@ -12,7 +12,7 @@
     --card-foreground: 0 0% 0%;
     --popover: 0 0% 98.8235%;
     --popover-foreground: 0 0% 0%;
-    --primary: 257.9412 100% 60%;
+    --primary: 212.9348 100% 63.9216%;
     --primary-foreground: 0 0% 100%;
     --secondary: 214.2857 24.1379% 94.3137%;
     --secondary-foreground: 0 0% 3.1373%;
@@ -46,6 +46,12 @@
     --font-serif: Roboto Serif, ui-serif, serif;
     --font-mono: Roboto Mono, ui-monospace, monospace;
     --radius: 1.4rem;
+    --shadow-x: 0px;
+    --shadow-y: 2px;
+    --shadow-blur: 3px;
+    --shadow-spread: 0px;
+    --shadow-opacity: 0.16;
+    --shadow-color: hsl(0 0% 0%);
     --shadow-2xs: 0px 2px 3px 0px hsl(0 0% 0% / 0.08);
     --shadow-xs: 0px 2px 3px 0px hsl(0 0% 0% / 0.08);
     --shadow-sm: 0px 2px 3px 0px hsl(0 0% 0% / 0.16),
@@ -70,7 +76,7 @@
     --card-foreground: 0 0% 94.1176%;
     --popover: 228 6.8493% 14.3137%;
     --popover-foreground: 0 0% 94.1176%;
-    --primary: 257.6687 100% 68.0392%;
+    --primary: 212.9348 100% 63.9216%;
     --primary-foreground: 0 0% 100%;
     --secondary: 226.6667 9.6774% 18.2353%;
     --secondary-foreground: 0 0% 94.1176%;
@@ -104,6 +110,12 @@
     --font-serif: Roboto Serif, ui-serif, serif;
     --font-mono: Roboto Mono, ui-monospace, monospace;
     --radius: 1.4rem;
+    --shadow-x: 0px;
+    --shadow-y: 2px;
+    --shadow-blur: 3px;
+    --shadow-spread: 0px;
+    --shadow-opacity: 0.16;
+    --shadow-color: hsl(0 0% 0%);
     --shadow-2xs: 0px 2px 3px 0px hsl(0 0% 0% / 0.08);
     --shadow-xs: 0px 2px 3px 0px hsl(0 0% 0% / 0.08);
     --shadow-sm: 0px 2px 3px 0px hsl(0 0% 0% / 0.16),
