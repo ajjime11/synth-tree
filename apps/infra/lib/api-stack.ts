@@ -1,5 +1,6 @@
 import * as cdk from "aws-cdk-lib";
 import * as ec2 from "aws-cdk-lib/aws-ec2";
+import * as ecr from "aws-cdk-lib/aws-ecr";
 import * as ecs from "aws-cdk-lib/aws-ecs";
 import * as elbv2 from "aws-cdk-lib/aws-elasticloadbalancingv2";
 import * as logs from "aws-cdk-lib/aws-logs";
@@ -84,6 +85,23 @@ export class ApiStack extends cdk.Stack {
     } = props;
 
     // ========================================
+    // ECR Repository
+    // ========================================
+
+    /**
+     * ECR repository for API container images
+     */
+    const apiRepository = new ecr.Repository(this, "ApiRepository", {
+      repositoryName: `${config.name}-api`,
+      removalPolicy:
+        config.name === "prod"
+          ? cdk.RemovalPolicy.RETAIN
+          : cdk.RemovalPolicy.DESTROY,
+      emptyOnDelete: true, // Clean up images when stack is deleted
+      imageScanOnPush: true, // Enable vulnerability scanning
+    });
+
+    // ========================================
     // SSL Certificate
     // ========================================
 
@@ -152,7 +170,6 @@ export class ApiStack extends cdk.Stack {
           healthyHttpCodes: "200",
         },
         deregistrationDelay: cdk.Duration.seconds(30),
-        targetGroupName: `${config.name}-api-tg`,
       }
     );
 
@@ -253,6 +270,16 @@ export class ApiStack extends cdk.Stack {
     // Grant permissions to read database secret
     databaseSecret.grantRead(taskExecutionRole);
 
+    // Import Firebase secret from Secrets Manager
+    const firebaseSecret = secretsmanager.Secret.fromSecretNameV2(
+      this,
+      "FirebaseSecret",
+      `/skilltree/${config.name}/firebase`
+    );
+
+    // Grant permissions to read Firebase secret
+    firebaseSecret.grantRead(taskExecutionRole);
+
     // Grant permissions to read parameters from Parameter Store
     taskExecutionRole.addToPolicy(
       new iam.PolicyStatement({
@@ -317,16 +344,9 @@ export class ApiStack extends cdk.Stack {
 
     /**
      * Add container to task definition
-     *
-     * NOTE: Using nginx as placeholder image
-     * The actual API image will be built and pushed to ECR by CI/CD pipeline
-     * and deployed via ECS service update
      */
     const container = taskDefinition.addContainer("ApiContainer", {
-      // Placeholder image - will be replaced by CI/CD pipeline
-      image: ecs.ContainerImage.fromRegistry("nginxdemos/hello"),
-      // For actual deployment, use ECR image:
-      // image: ecs.ContainerImage.fromEcrRepository(ecrRepository, "latest"),
+      image: ecs.ContainerImage.fromEcrRepository(apiRepository, "latest"),
 
       logging: ecs.LogDrivers.awsLogs({
         streamPrefix: "api",
@@ -348,6 +368,19 @@ export class ApiStack extends cdk.Stack {
         DATABASE_PASSWORD: ecs.Secret.fromSecretsManager(
           databaseSecret,
           "password"
+        ),
+        // Firebase credentials from Secrets Manager
+        FIREBASE_PROJECT_ID: ecs.Secret.fromSecretsManager(
+          firebaseSecret,
+          "project_id"
+        ),
+        FIREBASE_CLIENT_EMAIL: ecs.Secret.fromSecretsManager(
+          firebaseSecret,
+          "client_email"
+        ),
+        FIREBASE_PRIVATE_KEY: ecs.Secret.fromSecretsManager(
+          firebaseSecret,
+          "private_key"
         ),
       },
       containerName: "api",
@@ -486,6 +519,12 @@ export class ApiStack extends cdk.Stack {
       value: logGroup.logGroupName,
       description: "CloudWatch log group name",
       exportName: `${config.name}-ApiLogGroupName`,
+    });
+
+    new cdk.CfnOutput(this, "ApiRepositoryUri", {
+      value: apiRepository.repositoryUri,
+      description: "ECR repository URI for the API",
+      exportName: `${config.name}-ApiRepositoryUri`,
     });
   }
 }
