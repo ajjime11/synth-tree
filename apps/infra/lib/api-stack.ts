@@ -97,7 +97,7 @@ export class ApiStack extends cdk.Stack {
         config.name === "prod"
           ? cdk.RemovalPolicy.RETAIN
           : cdk.RemovalPolicy.DESTROY,
-      emptyOnDelete: true, // Clean up images when stack is deleted
+      emptyOnDelete: config.name !== "prod", // Clean up images when stack is deleted
       imageScanOnPush: true, // Enable vulnerability scanning
     });
 
@@ -346,6 +346,7 @@ export class ApiStack extends cdk.Stack {
      * Add container to task definition
      */
     const container = taskDefinition.addContainer("ApiContainer", {
+      // image: ecs.ContainerImage.fromRegistry("nginxdemos/hello"),
       image: ecs.ContainerImage.fromEcrRepository(apiRepository, "latest"),
 
       logging: ecs.LogDrivers.awsLogs({

@@ -205,7 +205,7 @@ export class StaticSite extends Construct {
             override: true,
           },
           frameOptions: {
-            frameOption: cloudfront.HeadersFrameOption.DENY,
+            frameOption: cloudfront.HeadersFrameOption.SAMEORIGIN,
             override: true,
           },
           xssProtection: {
