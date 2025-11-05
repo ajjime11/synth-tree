@@ -144,10 +144,11 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: Build Docker image (validation only)
-        working-directory: apps/api
         run: |
           echo "Building API Docker image..."
           docker buildx build \
+            --platform linux/amd64 \
+            --file apps/api/Dockerfile \
             --tag skilltree/api:pr-${{ github.event.pull_request.number }} \
             --load \
             .

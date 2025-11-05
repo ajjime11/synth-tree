@@ -70,10 +70,11 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: skilltree/api-dev
           IMAGE_TAG: ${{ github.sha }}
-        working-directory: apps/api
         run: |
-          # Build with cache
+          # Build with cache from monorepo root
           docker buildx build \
+            --platform linux/amd64 \
+            --file apps/api/Dockerfile \
             --cache-from type=registry,ref=$ECR_REGISTRY/$ECR_REPOSITORY:cache \
             --cache-to type=registry,ref=$ECR_REGISTRY/$ECR_REPOSITORY:cache,mode=max \
             --tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG \
@@ -285,10 +286,11 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: skilltree/api-prod
           IMAGE_TAG: ${{ github.sha }}
-        working-directory: apps/api
         run: |
-          # Build with cache
+          # Build with cache from monorepo root
           docker buildx build \
+            --platform linux/amd64 \
+            --file apps/api/Dockerfile \
             --cache-from type=registry,ref=$ECR_REGISTRY/$ECR_REPOSITORY:cache \
             --cache-to type=registry,ref=$ECR_REGISTRY/$ECR_REPOSITORY:cache,mode=max \
             --tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG \
