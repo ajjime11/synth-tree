@@ -215,6 +215,10 @@ jobs:
       - name: Reinstall dependencies (after building libs)
         run: pnpm install --frozen-lockfile
 
+      - name: Build UI package
+        working-directory: packages/ui
+        run: pnpm build
+
       - name: Build Storybook
         working-directory: packages/ui
         run: |
