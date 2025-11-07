@@ -3,7 +3,7 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 async function main() {
   // Clear existing data
-  await prisma.lesson.deleteMany();
+  //await prisma.lesson.deleteMany();
   await prisma.user.deleteMany();
   // Create users
   const admin = await prisma.user.create({
